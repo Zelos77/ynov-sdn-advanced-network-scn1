@@ -57,13 +57,13 @@ vagrant up
 
 ## Monitoring avec Prometheus & Grafana
 
-| Composant     | Port  | Fonction                                  |
-|---------------|-------|-------------------------------------------|
-| Prometheus    | 9090  | Collecte des métriques                    |
-| Grafana       | 3000  | Visualisation des dashboards              |
-| Node Exporter | 9100  | CPU, RAM, réseau (toutes les VMs)         |
-| frr_exporter  | 9122  | Métriques OSPF extraites via vtysh        | (non configuré actuellement)
-| Telegraf      | 9273  | Métriques système supplémentaires (client)| (non configuré actuellement)
+| Composant     | Port  | Fonction                                                 |
+|---------------|-------|----------------------------------------------------------|
+| Prometheus    | 9090  | Collecte des métriques                                   |
+| Grafana       | 3000  | Visualisation des dashboards                             |
+| Node Exporter | 9100  | CPU, RAM, réseau (toutes les VMs)                        |
+| frr_exporter  | 9122  | Métriques OSPF extraites via vtysh                       | 
+| Telegraf      | 9273  | Métriques système supplémentaires (client) (pas config)  |
 
 ### Prometheus scrape config :
 ```yaml
