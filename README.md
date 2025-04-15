@@ -25,7 +25,9 @@ Concevoir, déployer et superviser une infrastructure réseau avancée dans un e
 ## Déploiement rapide
 
 ```bash
-vagrant up
+S'assurer que le end of line sequence est en "LF" plutot que CRLF
+
+Lancer la commande : vagrant up
 
 - vérifier les targets Prometheus http://192.168.100.10:9090/targets
 - Importer un dashboard dans grafana http://192.168.100.10:3000 (login: admin/admin)
