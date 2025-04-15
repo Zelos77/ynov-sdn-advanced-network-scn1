@@ -1,0 +1,39 @@
+Vagrant.configure("2") do |config|
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.cpus = 1
+    end
+  
+    # Script commun à toutes les VMs
+    config.vm.provision "shell", path: "scripts/common.sh", run: "always"
+  
+    # Contrôleur Ryu
+    config.vm.define "ryu" do |ryu|
+      ryu.vm.box = "ubuntu/focal64"
+      ryu.vm.hostname = "ryu-controller"
+      ryu.vm.network "private_network", ip: "192.168.100.10"
+      ryu.vm.provision "shell", path: "scripts/ryu-setup.sh"
+      ryu.vm.network "forwarded_port", guest: 3000, host: 3000  # Grafana
+      ryu.vm.network "forwarded_port", guest: 9090, host: 9090  # Prometheus
+    end
+  
+    # Routeurs
+    ["router1", "router2"].each_with_index do |name, idx|
+      config.vm.define name do |router|
+        router.vm.box = "ubuntu/focal64"
+        router.vm.hostname = name
+        router.vm.network "private_network", ip: "192.168.100.#{21 + idx}"
+        router.vm.provision "shell", path: "scripts/frr-setup.sh"
+      end
+    end
+  
+    # Clients
+    ["client1"].each_with_index do |name, idx|
+      config.vm.define name do |client|
+        client.vm.box = "ubuntu/focal64"
+        client.vm.hostname = name
+        client.vm.network "private_network", ip: "192.168.100.30"
+        client.vm.provision "shell", path: "scripts/client-setup.sh"
+      end
+    end
+  end
