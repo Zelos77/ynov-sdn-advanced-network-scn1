@@ -1,0 +1,47 @@
+# === Vagrant files ===
+.vagrant/
+*.box
+
+# === System files ===
+*.swp
+*.bak
+*.tmp
+*.log
+*.pid
+*~
+
+# === Archives ===
+*.tar.gz
+*.tar
+*.zip
+*.tgz
+*.gz
+
+# === Python bytecode ===
+__pycache__/
+*.pyc
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === Editor files ===
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# === Local testing / debug ===
+*.test
+*.out
+
+# === Prometheus & Grafana state (if local config is generated) ===
+prometheus/
+grafana/
+
+# === Credentials / secrets (ex: ~/.ssh, .env files...) ===
+*.pem
+*.key
+*.crt
+.env
+.env.*
