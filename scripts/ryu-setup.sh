@@ -1,6 +1,8 @@
 #!/bin/bash
 source /vagrant/scripts/common.sh
 
+# Les EOL Sequence doivent etre en LF
+
 # === 1. Installation de Ryu, OVS, dépendances ===
 sudo apt-get install -y \
     openvswitch-switch \

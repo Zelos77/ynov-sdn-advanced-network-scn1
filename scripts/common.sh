@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script commun exécuté sur toutes les machines
+# Script commun exécuté sur toutes les machines - Les EOL Sequence doivent etre en LF
 
 ## 1. Configuration des permissions
 echo "vagrant ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/vagrant

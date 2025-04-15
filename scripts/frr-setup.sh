@@ -1,6 +1,8 @@
 #!/bin/bash
 source /vagrant/scripts/common.sh
 
+# Les EOL Sequence doivent etre en LF
+
 # === 1. Installer FRRouting ===
 sudo apt-get install -y frr
 

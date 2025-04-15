@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script de configuration des machines clientes
+# Script de configuration des machines clientes - Les EOL Sequence doivent etre en LF
 
 # Charger la configuration commune
 source /vagrant/scripts/common.sh
