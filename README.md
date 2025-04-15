@@ -27,8 +27,8 @@ Concevoir, déployer et superviser une infrastructure réseau avancée dans un e
 ```bash
 vagrant up
 
-- vérifier les targets Prometheus http://192.168.100.10:9090/targets`
-- Importer un dashboard dans grafana http://192.168.100.10:3000` (login: admin/admin)
+- vérifier les targets Prometheus http://192.168.100.10:9090/targets
+- Importer un dashboard dans grafana http://192.168.100.10:3000 (login: admin/admin)
 ```
 
 ---
