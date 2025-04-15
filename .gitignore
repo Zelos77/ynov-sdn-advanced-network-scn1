@@ -45,3 +45,6 @@ grafana/
 *.crt
 .env
 .env.*
+
+# Rapports de tests générés automatiquement
+/tests/
