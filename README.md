@@ -1,6 +1,6 @@
 # Projet Réseaux Avancés Cloud & SDN – Infrastructure FRR + Ryu + Monitoring
 
-## 🎯 Objectif du projet
+## Objectif du projet
 
 Concevoir, déployer et superviser une infrastructure réseau avancée dans un environnement cloud privé simulé avec :
 
@@ -11,7 +11,7 @@ Concevoir, déployer et superviser une infrastructure réseau avancée dans un e
 
 ---
 
-## 🖥️ Infrastructure VM
+## Infrastructure VM
 
 | VM           | Rôle                        | IP                  |
 |--------------|-----------------------------|---------------------|
@@ -19,6 +19,14 @@ Concevoir, déployer et superviser une infrastructure réseau avancée dans un e
 | router1      | Routeur OSPF + Exporter     | `192.168.100.21`    |
 | router2      | Routeur OSPF + Exporter     | `192.168.100.22`    |
 | client       | Client Linux + tests        | `192.168.100.30`    |
+
+---
+
+## Déploiement rapide
+
+```bash
+vagrant up
+```
 
 ---
 
@@ -51,8 +59,8 @@ Concevoir, déployer et superviser une infrastructure réseau avancée dans un e
 | Prometheus    | 9090  | Collecte des métriques                    |
 | Grafana       | 3000  | Visualisation des dashboards              |
 | Node Exporter | 9100  | CPU, RAM, réseau (toutes les VMs)         |
-| frr_exporter  | 9122  | Métriques OSPF extraites via vtysh        |
-| Telegraf      | 9273  | Métriques système supplémentaires (client)|
+| frr_exporter  | 9122  | Métriques OSPF extraites via vtysh        | (non configuré actuellement)
+| Telegraf      | 9273  | Métriques système supplémentaires (client)| (non configuré actuellement)
 
 ### Prometheus scrape config :
 ```yaml
@@ -108,32 +116,13 @@ scrape_configs:
 
 ---
 
-## 📈 Dashboards Grafana recommandés
+## Dashboards Grafana recommandés
 
 - Dashboard a importer dans grafana depuis le dossier dashboard
 
 ---
 
-## 🚀 Déploiement rapide
-
-```bash
-vagrant up
-vagrant provision router1
-vagrant provision router2
-vagrant provision ryu
-```
-
----
-
-## 📦 Bonus
-
-- Test de failover OSPF : désactive temporairement `router2`
-- Capture réseau avec `tcpdump`
-- Intégration future : VPN, BGP, overlay VXLAN, Istio
-
----
-
-## 🛡️ Sécurité & extensions
+## Sécurité & extensions
 
 - ACLs OpenFlow possibles dans Ryu
 - TLS Prometheus + auth Grafana (via reverse proxy)
@@ -141,7 +130,7 @@ vagrant provision ryu
 
 ---
 
-## 🧠 À retenir
+## À retenir
 
 - `frr_exporter` doit être lancé avec :  
 ```bash
@@ -172,4 +161,4 @@ projet-sdn/
 
 ## 📜 Licence
 
-zelos engineering - Projet pédagogique dans le cadre du module Réseaux Avancés Cloud & SDN – Ynov 2025
+zelos engineering - Projet pédagogique dans le cadre du module Réseaux Avancés Cloud & SDN – Ynov M1 infra 2025
