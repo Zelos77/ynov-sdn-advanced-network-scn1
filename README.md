@@ -62,7 +62,7 @@ vagrant up
 | Prometheus    | 9090  | Collecte des métriques                                   |
 | Grafana       | 3000  | Visualisation des dashboards                             |
 | Node Exporter | 9100  | CPU, RAM, réseau (toutes les VMs)                        |
-| frr_exporter  | 9122  | Métriques OSPF extraites via vtysh                       | 
+| frr_exporter  | 9122  | Métriques OSPF extraites via vtysh    (pas config)       | 
 | Telegraf      | 9273  | Métriques système supplémentaires (client) (pas config)  |
 
 ### Prometheus scrape config :
