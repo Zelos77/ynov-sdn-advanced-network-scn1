@@ -1,81 +1,86 @@
 # 📘 Journal de bord technique – Projet Réseaux Avancés SDN (Scénario 1)
 
----
+##  Initialisation
 
-## 🗓️ Initialisation
 - Création du `Vagrantfile` avec les VMs suivantes : `ryu`, `router1`, `router2`, `client`.
-- Ajout des IP fixes via réseau privé (`192.168.100.0/24`).
-- Dossier structuré : `scripts/`, `configs/`, `ryu-apps/`.
+- Attribution d’IP fixes via réseau privé (192.168.100.0/24).
+- Arborescence projet structurée :
+  - `scripts/` : automatisation
+  - `configs/` : fichiers FRR
+  - `ryu-apps/` : contrôleur Ryu
 
----
+##  Déploiement des composants de base
 
-## 🛠️ Déploiement des composants de base
-- Installation et configuration de FRRouting (`frr`) sur les routeurs.
-- Activation du daemon OSPF (`ospfd=yes` dans `/etc/frr/daemons`).
-- Création des fichiers `frr.conf` pour `router1` et `router2`.
+- Installation et configuration de FRRouting (frr) sur les routeurs.
+- Activation du daemon OSPF (via `/etc/frr/daemons` → `ospfd=yes`).
+- Création des fichiers `frr.conf` adaptés pour `router1` et `router2`.
 
----
+## Intégration SDN
 
-## 🧠 Intégration SDN
-- Déploiement d'Open vSwitch (`ovs-vsctl`) sur `ryu`.
-- Bridge `br0` connecté à `enp0s8`, relié au contrôleur Ryu.
-- Script `http_redirect.py` opérationnel avec `ryu-manager`.
+- Installation et configuration d’Open vSwitch (OVS) sur la VM `ryu`.
+- Création automatique du bridge `br0` relié à l’interface `enp0s8`.
+- Script `scripts/ovs-setup.sh` :
+  - Détecte dynamiquement l’interface réelle
+  - Crée le bridge si nécessaire
+  - Transfère automatiquement l’adresse IP et la route par défaut vers `br0`
+- Contrôleur Ryu opérationnel (via `ryu-manager`) avec l’application `http_redirect.py`.
 
----
+## Mise en place du monitoring
 
-## 📊 Mise en place du monitoring
-- Installation de Prometheus + Grafana sur `ryu`.
-- Node Exporter installé sur toutes les VMs.
-- Ajout du scrape config dans `prometheus.yml`.
+- Installation de Prometheus et Grafana sur la VM `ryu`.
+- Installation de `node_exporter` sur toutes les VMs.
+- Configuration du `prometheus.yml` avec `scrape_configs` adaptés.
 
----
+## Intégration de frr_exporter
 
-## 🔎 Intégration de frr_exporter
-- Tests avec versions `1.4.0`, `1.3.3` → incompatible avec `--frr.vtysh`.
-- Adoption de `frr_exporter v1.0.0` avec support `--frr.vtysh`.
-- Création et déploiement du service `frr_exporter.service` (port 9122).
-- Ajout du user `frr` au groupe `frrvty`.
-
----
+- Tests avec plusieurs versions : 1.4.0, 1.3.3 (incompatibles avec `--frr.vtysh`)
+- Utilisation de la version 1.0.0 fonctionnelle avec `--frr.vtysh`.
+- Déploiement du service `frr_exporter.service` (exposition sur le port 9122).
+- Ajout de l’utilisateur `frr` au groupe `frrvty` pour l’accès à `vtysh`.
 
 ## 🧪 Tests Prometheus / curl
-- Vérification des métriques sur `http://localhost:9122/metrics`.
+
+- Vérification des métriques OSPF :
+  - http://localhost:9122/metrics
 - Exporters UP sur `router1` et `router2`.
 
----
+## Dashboards Grafana
 
-## 📈 Dashboards Grafana
-- Création et import du dashboard `FRR OSPF Monitoring`.
-- Panels `OSPF Neighbors`, `Adjacencies`, `Routes`, `Time Series`.
+- Création du dashboard FRR/OSPF Monitoring.
+- Panels affichés :
+  - OSPF Neighbors
+  - Adjacencies
+  - Routing Tables
+  - Courbes de temps
 
----
+## Génération des rapports de test
 
-## 📝 Génération des rapports de test
-- Script `generate-report.sh` créé dans `scripts/`.
-- Création d’un script global `run-all-reports.sh`.
-- Tests générés pour chaque VM dans `tests/`.
-- Ajout de `/tests/` au `.gitignore`.
+- Création du script `scripts/generate-report.sh`.
+- Script global `run-all-reports.sh` pour lancer tous les tests.
+- Fichiers de résultats dans le dossier `tests/`.
+- Dossier `tests/` ajouté au `.gitignore`.
 
----
+## Problème détecté
 
-## ❌ Problème détecté :
-- OSPF "non actif" malgré services UP.
+- OSPF "non actif" malgré services UP sur les deux routeurs.
 
-## ✅ Résolution :
+## Résolution
+
 - Mauvais nom d’interface dans `frr.conf` (`eth1` au lieu de `enp0s8`).
-- Correction manuelle des fichiers sur `router1` et `router2`.
-- Redémarrage de `frr`.
+- Correction manuelle des interfaces.
+- Redémarrage du service `frr`.
 
----
+## 15/04/2025 – Validation finale OSPF
 
-## ✅ 15/04/2025 – Validation finale OSPF
-- `router1` voit `router2` en `Full/Backup`.
-- `show ip ospf neighbor` OK des deux côtés.
-- OSPF stable, métriques visibles et dashboards fonctionnels.
+- `router1` voit `router2` en Full/Backup.
+- Commande `show ip ospf neighbor` fonctionnelle des deux côtés.
+- OSPF stable, métriques visibles, dashboard complet.
 
----
+## 20/06/2025 – Automatisation OVS & Réseau SDN
 
-## 🔜 Prochaines étapes
-- Génération du schéma réseau
-- Rapport de soutenance
-- Simulation de panne OSPF + observation Grafana
+- Script `ovs-setup.sh` finalisé :
+  - Gestion propre du bridge OVS `br0`
+  - Transfert dynamique de l’adresse IP
+  - Résolution automatique de la route par défaut
+- Le bridge est prêt pour recevoir les flux contrôlés depuis Ryu.
+- Architecture SDN pleinement fonctionnelle avec base OSPF + SDN.
