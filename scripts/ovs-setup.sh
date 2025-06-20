@@ -41,7 +41,7 @@ else
     echo "[!] Aucune adresse IP détectée sur enp0s8, vérifiez la configuration"
 fi
 
-# Affichage du résultat
+# Affichage du résultat !
 echo "[✔] Configuration terminée"
 ip addr show br0
 ip route
