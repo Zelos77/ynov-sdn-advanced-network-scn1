@@ -11,6 +11,21 @@ Concevoir, déployer et superviser une infrastructure réseau avancée dans un e
 
 ---
 
+## Correspondance avec les objectifs pédagogiques
+
+| Exigence pédagogique                        | Implémentation technique                                   |
+|--------------------------------------------|------------------------------------------------------------|
+| Routage dynamique (OSPF)                   | FRRouting sur router1 et router2 avec `ospfd`              |
+| Contrôle SDN avec contrôleur programmable  | Ryu Controller (script `http_redirect.py`)                |
+| Bridge programmable                        | Open vSwitch (`br0`) sur chaque routeur                   |
+| Supervision centralisée                    | Prometheus + Grafana + `node_exporter` + `frr_exporter`   |
+| Métriques OSPF exploitées                  | Export via `frr_exporter` + Prometheus scrape             |
+| Automatisation des rôles                   | Scripts Bash (`frr-setup.sh`, `ryu-setup.sh`, etc.)       |
+| Tests réseau                               | Ping, curl, HTTP redirect, observation des métriques      |
+| Documentation                              | README complet + journal technique + diagramme réseau     |
+
+---
+
 ## Infrastructure VM
 
 | VM           | Rôle                        | IP                  |
@@ -109,6 +124,11 @@ scrape_configs:
 ### `common.sh`
 - Tâches système : upgrade, swapoff, exporteurs, logs, sysctl, sudo
 
+### `ovs-setup.sh`
+- Installe Open vSwitch
+- Crée le bridge br0, attache les interfaces
+- Configure le contrôleur OVS vers la VM ryu
+
 ---
 
 ## Tests à réaliser
@@ -127,14 +147,6 @@ scrape_configs:
 
 ---
 
-## Sécurité & extensions
-
-- ACLs OpenFlow possibles dans Ryu
-- TLS Prometheus + auth Grafana (via reverse proxy)
-- Supervision auto avec alertes Grafana
-
----
-
 ## À retenir
 
 - `frr_exporter` doit être lancé avec :  
@@ -142,25 +154,6 @@ scrape_configs:
 --frr.vtysh --frr.vtysh.path="/usr/bin/vtysh"
 ```
 - Le user `frr` doit appartenir au groupe `frrvty`
-
----
-
-## 📂 Arborescence du projet (extrait)
-
-```
-projet-sdn/
-├── Vagrantfile
-├── scripts/
-│   ├── common.sh
-│   ├── frr-setup.sh
-│   ├── ryu-setup.sh
-│   ├── client-setup.sh
-├── configs/
-│   ├── router1-frr.conf
-│   ├── router2-frr.conf
-├── ryu-apps/
-│   └── http_redirect.py
-```
 
 ---
 
