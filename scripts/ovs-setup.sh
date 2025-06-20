@@ -1,43 +1,47 @@
 #!/bin/bash
 
-set -e
-
-echo "[+] Démarrage du script ovs-setup.sh"
-
-# Installation d'Open vSwitch
-echo "[+] Installation d'Open vSwitch"
+# Mettre à jour les paquets et installer Open vSwitch
 sudo apt update
 sudo apt install -y openvswitch-switch
 
-# Création du bridge OVS
-echo "[+] Création du bridge OVS : br0"
+# Créer le bridge br0 s'il n'existe pas déjà
 if ! sudo ovs-vsctl br-exists br0; then
-  sudo ovs-vsctl add-br br0
+    echo "[+] Création du bridge br0"
+    sudo ovs-vsctl add-br br0
 else
-  echo "[i] Le bridge br0 existe déjà"
+    echo "[=] Le bridge br0 existe déjà"
 fi
 
-# Interface à ajouter au bridge
-INTERFACE="enp0s8"
-
-# Vérification de l'existence de l'interface réseau
-if ip link show "$INTERFACE" > /dev/null 2>&1; then
-  echo "[+] Ajout de l'interface $INTERFACE au bridge br0"
-  sudo ovs-vsctl add-port br0 "$INTERFACE" || echo "[i] $INTERFACE déjà connectée"
+# Ajouter l'interface physique enp0s8 au bridge s'il n'est pas encore présent
+if ! sudo ovs-vsctl list-ports br0 | grep -q enp0s8; then
+    echo "[+] Ajout de l'interface enp0s8 au bridge br0"
+    sudo ovs-vsctl add-port br0 enp0s8
 else
-  echo "[!] Interface $INTERFACE non trouvée. Aucun port ajouté au bridge."
+    echo "[=] L'interface enp0s8 est déjà présente dans br0"
 fi
 
-# Définition du contrôleur Ryu
-RYU_CONTROLLER_IP="192.168.100.10"
-echo "[+] Liaison du bridge OVS au contrôleur Ryu ($RYU_CONTROLLER_IP:6633)"
-sudo ovs-vsctl set-controller br0 tcp:$RYU_CONTROLLER_IP:6633
+# Récupérer l'adresse IP actuelle de enp0s8 et la gateway
+IP=$(ip -4 -o addr show enp0s8 | awk '{print $4}')
+GW=$(ip route show default | awk '/default/ {print $3}')
 
-# Mode sécurisé
-sudo ovs-vsctl set-fail-mode br0 secure
+echo "[*] Adresse IP détectée sur enp0s8 : $IP"
+echo "[*] Gateway détectée : $GW"
 
-# Affichage de la config
-echo "[+] Configuration actuelle du bridge :"
-sudo ovs-vsctl show
+# Désactiver l'IP de enp0s8 et la transférer vers br0
+if [ -n "$IP" ]; then
+    echo "[+] Transfert de l'IP de enp0s8 vers br0"
+    sudo ip addr flush dev enp0s8
+    sudo ip addr add "$IP" dev br0
+    sudo ip link set dev br0 up
 
-echo "[✓] Open vSwitch configuré avec succès sur $(hostname)"
+    # Supprimer puis rétablir la route par défaut
+    sudo ip route del default || true
+    sudo ip route add default via "$GW"
+else
+    echo "[!] Aucune adresse IP détectée sur enp0s8, vérifiez la configuration"
+fi
+
+# Affichage du résultat !
+echo "[✔] Configuration terminée"
+ip addr show br0
+ip route
