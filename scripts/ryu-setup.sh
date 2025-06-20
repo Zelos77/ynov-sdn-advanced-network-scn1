@@ -13,10 +13,10 @@ sudo apt-get install -y \
     gnupg2
 
 # === 2. Configuration d'Open vSwitch ===
-sudo ovs-vsctl add-br br0
-sudo ovs-vsctl add-port br0 eth1
-sudo ovs-vsctl set-controller br0 tcp:192.168.100.10:6633
-sudo ovs-vsctl set-fail-mode br0 secure
+#sudo ovs-vsctl add-br br0
+#sudo ovs-vsctl add-port br0 enp0s8
+#sudo ovs-vsctl set-controller br0 tcp:192.168.100.10:6633
+#sudo ovs-vsctl set-fail-mode br0 secure
 
 # === 3. Installation de Grafana depuis le dépôt officiel ===
 sudo mkdir -p /etc/apt/keyrings
