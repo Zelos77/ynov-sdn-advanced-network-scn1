@@ -1,4 +1,4 @@
-# 📘 Journal de bord technique – Projet Réseaux Avancés SDN (Scénario 1)
+# Journal de bord technique – Projet Réseaux Avancés SDN (Scénario 1)
 
 ##  Initialisation
 
@@ -38,7 +38,7 @@
 - Déploiement du service `frr_exporter.service` (exposition sur le port 9122).
 - Ajout de l’utilisateur `frr` au groupe `frrvty` pour l’accès à `vtysh`.
 
-## 🧪 Tests Prometheus / curl
+## Tests Prometheus / curl
 
 - Vérification des métriques OSPF :
   - http://localhost:9122/metrics
